@@ -11,7 +11,7 @@ mod reaction_role_row;
 mod remove;
 
 use add::add;
-pub(crate) use error::{Error, Result};
+pub use error::{Error, Result};
 pub use reaction_role_row::ReactionRoleRow;
 use remove::remove;
 

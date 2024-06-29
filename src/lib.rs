@@ -15,7 +15,7 @@ use add::add;
 pub(crate) use error::{Error, Result};
 use remove::remove;
 
-struct ReactionRoles;
+pub struct ReactionRoles;
 
 impl ReactionRoles {
     async fn run<Row: ReactionRoleRow>(

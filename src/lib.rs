@@ -1,4 +1,3 @@
-use reaction_role_row::ReactionRoleRow;
 use serenity::all::{
     CommandInteraction, CommandOptionType, Context, CreateCommand, CreateCommandOption,
     Permissions, ReactionType, ResolvedValue,
@@ -13,6 +12,7 @@ mod remove;
 
 use add::add;
 pub(crate) use error::{Error, Result};
+pub use reaction_role_row::ReactionRoleRow;
 use remove::remove;
 
 pub struct ReactionRoles;

@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+slash-command-core = { git = "https://github.com/zayden-bot/slash-command-core.git", branch = "master" }
+sqlx = { version = "*", default-features = false, features = ["postgres"] }
+
+
+[dependencies.serenity]
+version = "*"
+default-features = false
+features = ["rustls_backend", "builder", "client", "gateway", "model"]

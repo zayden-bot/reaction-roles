@@ -3,21 +3,21 @@ use sqlx::any::AnyQueryResult;
 use sqlx::Pool;
 
 #[async_trait]
-pub trait ReactionRoleRow<D: sqlx::Database> {
+pub trait ReactionRoleRow<Db: sqlx::Database> {
     async fn create(
-        pool: &Pool<D>,
-        guild_id: impl Into<i64>,
-        channel_id: impl Into<i64>,
-        message_id: impl Into<i64>,
-        role_id: impl Into<i64>,
+        pool: &Pool<Db>,
+        guild_id: impl Into<i64> + Send,
+        channel_id: impl Into<i64> + Send,
+        message_id: impl Into<i64> + Send,
+        role_id: impl Into<i64> + Send,
         emoji: &str,
     ) -> sqlx::Result<AnyQueryResult>;
 
     async fn delete(
-        pool: &Pool<D>,
-        guild_id: impl Into<i64>,
-        channel_id: impl Into<i64>,
-        message_id: impl Into<i64>,
+        pool: &Pool<Db>,
+        guild_id: impl Into<i64> + Send,
+        channel_id: impl Into<i64> + Send,
+        message_id: impl Into<i64> + Send,
         emoji: &str,
     ) -> sqlx::Result<AnyQueryResult>;
 }

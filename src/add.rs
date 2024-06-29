@@ -2,21 +2,25 @@ use serenity::all::{
     ChannelId, CommandInteraction, Context, CreateEmbed, CreateMessage, EditInteractionResponse,
     GuildId, Mentionable, MessageId, ReactionType, ResolvedValue,
 };
-use sqlx::PgPool;
+use sqlx::Pool;
 use std::collections::HashMap;
 
 use crate::reaction_role_row::ReactionRoleRow;
 use crate::Result;
 
-pub(crate) async fn add<Row: ReactionRoleRow>(
+pub(crate) async fn add<Db, Row>(
     ctx: &Context,
     interaction: &CommandInteraction,
-    pool: &PgPool,
-    guild_id: &GuildId,
-    channel_id: &ChannelId,
+    pool: &Pool<Db>,
+    guild_id: GuildId,
+    channel_id: ChannelId,
     reaction: ReactionType,
     options: &HashMap<&str, &ResolvedValue<'_>>,
-) -> Result<()> {
+) -> Result<()>
+where
+    Db: sqlx::Database,
+    Row: ReactionRoleRow<Db>,
+{
     let role = match options.get("role") {
         Some(ResolvedValue::Role(role)) => *role,
         _ => unreachable!("Role is required"),
@@ -45,8 +49,8 @@ pub(crate) async fn add<Row: ReactionRoleRow>(
 
     Row::create(
         pool,
-        *guild_id,
-        *channel_id,
+        guild_id,
+        channel_id,
         message.id,
         role.id,
         &reaction.to_string(),

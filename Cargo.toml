@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 slash-command-core = { git = "https://github.com/zayden-bot/slash-command-core.git", branch = "master" }
-sqlx = { version = "*", default-features = false, features = ["postgres"] }
+sqlx = { version = "*", default-features = false, features = ["any"] }
 
 
 [dependencies.serenity]

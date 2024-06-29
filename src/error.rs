@@ -4,6 +4,11 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     CommandNotInGuild,
 
+    InvalidGuildId,
+    InvalidChannelId,
+    InvalidMessageId,
+    InvalidRoleId,
+
     ParseInt(std::num::ParseIntError),
     Serenity(serenity::Error),
     ReactionConversion(serenity::all::ReactionConversionError),

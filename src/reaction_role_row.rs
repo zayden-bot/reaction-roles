@@ -1,23 +1,23 @@
 use serenity::async_trait;
-use sqlx::postgres::PgQueryResult;
-use sqlx::PgPool;
+use sqlx::any::AnyQueryResult;
+use sqlx::Pool;
 
 #[async_trait]
-pub trait ReactionRoleRow {
+pub trait ReactionRoleRow<D: sqlx::Database> {
     async fn create(
-        pool: &PgPool,
-        guild_id: impl TryInto<i64>,
-        channel_id: impl TryInto<i64>,
-        message_id: impl TryInto<i64>,
-        role_id: impl TryInto<i64>,
+        pool: &Pool<D>,
+        guild_id: impl Into<i64>,
+        channel_id: impl Into<i64>,
+        message_id: impl Into<i64>,
+        role_id: impl Into<i64>,
         emoji: &str,
-    ) -> sqlx::Result<PgQueryResult>;
+    ) -> sqlx::Result<AnyQueryResult>;
 
     async fn delete(
-        pool: &PgPool,
-        guild_id: impl TryInto<i64>,
-        channel_id: impl TryInto<i64>,
-        message_id: impl TryInto<i64>,
+        pool: &Pool<D>,
+        guild_id: impl Into<i64>,
+        channel_id: impl Into<i64>,
+        message_id: impl Into<i64>,
         emoji: &str,
-    ) -> sqlx::Result<PgQueryResult>;
+    ) -> sqlx::Result<AnyQueryResult>;
 }

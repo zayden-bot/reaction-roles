@@ -2,21 +2,25 @@ use serenity::all::{
     ChannelId, CommandInteraction, Context, EditInteractionResponse, GuildId, MessageId,
     ReactionType, ResolvedValue,
 };
-use sqlx::PgPool;
+use sqlx::Pool;
 use std::collections::HashMap;
 
 use crate::reaction_role_row::ReactionRoleRow;
 use crate::Result;
 
-pub(crate) async fn remove<Row: ReactionRoleRow>(
+pub(crate) async fn remove<Db, Row>(
     ctx: &Context,
     interaction: &CommandInteraction,
-    pool: &PgPool,
-    channel_id: &ChannelId,
-    guild_id: &GuildId,
+    pool: &Pool<Db>,
+    channel_id: ChannelId,
+    guild_id: GuildId,
     reaction: ReactionType,
     options: &HashMap<&str, &ResolvedValue<'_>>,
-) -> Result<()> {
+) -> Result<()>
+where
+    Db: sqlx::Database,
+    Row: ReactionRoleRow<Db>,
+{
     let message_id = match options.get("message_id") {
         Some(ResolvedValue::String(message_id)) => MessageId::new(message_id.parse()?),
         _ => unreachable!("Message ID is required"),
@@ -24,9 +28,9 @@ pub(crate) async fn remove<Row: ReactionRoleRow>(
 
     Row::delete(
         pool,
-        guild_id.get(),
-        channel_id.get(),
-        message_id.get(),
+        guild_id,
+        channel_id,
+        message_id,
         &reaction.to_string(),
     )
     .await?;

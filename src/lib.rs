@@ -3,7 +3,7 @@ use serenity::all::{
     Permissions, ReactionType, ResolvedValue,
 };
 use slash_command_core::parse_options;
-use sqlx::PgPool;
+use sqlx::Pool;
 
 mod add;
 pub mod error;
@@ -18,11 +18,15 @@ use remove::remove;
 pub struct ReactionRoles;
 
 impl ReactionRoles {
-    pub async fn run<Row: ReactionRoleRow>(
+    pub async fn run<Db, Row>(
         ctx: &Context,
         interaction: &CommandInteraction,
-        pool: &PgPool,
-    ) -> Result<()> {
+        pool: &Pool<Db>,
+    ) -> Result<()>
+    where
+        Db: sqlx::Database,
+        Row: ReactionRoleRow<Db>,
+    {
         let _ = interaction.defer(ctx).await;
 
         let guild_id = interaction
@@ -49,24 +53,24 @@ impl ReactionRoles {
 
         match command.name {
             "add" => {
-                add::<Row>(
+                add::<Db, Row>(
                     ctx,
                     interaction,
                     pool,
-                    &guild_id,
-                    &channel.id,
+                    guild_id,
+                    channel.id,
                     reaction,
                     &options,
                 )
                 .await?
             }
             "remove" => {
-                remove::<Row>(
+                remove::<Db, Row>(
                     ctx,
                     interaction,
                     pool,
-                    &channel.id,
-                    &guild_id,
+                    channel.id,
+                    guild_id,
                     reaction,
                     &options,
                 )

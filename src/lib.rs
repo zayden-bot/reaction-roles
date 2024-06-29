@@ -18,7 +18,7 @@ use remove::remove;
 pub struct ReactionRoles;
 
 impl ReactionRoles {
-    async fn run<Row: ReactionRoleRow>(
+    pub async fn run<Row: ReactionRoleRow>(
         ctx: &Context,
         interaction: &CommandInteraction,
         pool: &PgPool,
@@ -78,7 +78,7 @@ impl ReactionRoles {
         Ok(())
     }
 
-    fn register() -> CreateCommand {
+    pub fn register() -> CreateCommand {
         CreateCommand::new("reaction_role")
             .description("Adds or removes a reaction role")
             .default_member_permissions(Permissions::MANAGE_MESSAGES)

@@ -6,8 +6,8 @@ use slash_command_core::parse_options;
 use sqlx::PgPool;
 
 mod add;
-mod error;
-mod reaction_role_row;
+pub mod error;
+pub mod reaction_role_row;
 mod remove;
 
 use add::add;

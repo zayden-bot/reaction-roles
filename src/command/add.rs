@@ -72,11 +72,6 @@ where
 
 pub(super) fn register() -> CreateCommandOption {
     CreateCommandOption::new(CommandOptionType::SubCommand, "add", "Adds a reaction role")
-        .add_sub_option(CreateCommandOption::new(
-            CommandOptionType::Channel,
-            "channel",
-            "The channel the message is in",
-        ))
         .add_sub_option(
             CreateCommandOption::new(
                 CommandOptionType::String,
@@ -93,6 +88,11 @@ pub(super) fn register() -> CreateCommandOption {
             )
             .required(true),
         )
+        .add_sub_option(CreateCommandOption::new(
+            CommandOptionType::Channel,
+            "channel",
+            "The channel the message is in",
+        ))
         .add_sub_option(CreateCommandOption::new(
             CommandOptionType::String,
             "message_id",

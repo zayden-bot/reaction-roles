@@ -55,11 +55,6 @@ pub(super) fn register() -> CreateCommandOption {
         "remove",
         "Removes a reaction role",
     )
-    .add_sub_option(CreateCommandOption::new(
-        CommandOptionType::Channel,
-        "channel",
-        "The channel the message is in",
-    ))
     .add_sub_option(
         CreateCommandOption::new(
             CommandOptionType::String,
@@ -76,4 +71,9 @@ pub(super) fn register() -> CreateCommandOption {
         )
         .required(true),
     )
+    .add_sub_option(CreateCommandOption::new(
+        CommandOptionType::Channel,
+        "channel",
+        "The channel the message is in",
+    ))
 }

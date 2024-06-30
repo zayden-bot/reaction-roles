@@ -9,6 +9,10 @@ pub enum Error {
     InvalidMessageId,
     InvalidRoleId,
 
+    MemberNotFound(serenity::all::Reaction),
+    GuildNotFound(serenity::all::Reaction),
+    UserNotFound(serenity::all::Reaction),
+
     ParseInt(std::num::ParseIntError),
     Serenity(serenity::Error),
     ReactionConversion(serenity::all::ReactionConversionError),

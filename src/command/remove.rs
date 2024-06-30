@@ -1,6 +1,6 @@
 use serenity::all::{
-    ChannelId, CommandInteraction, CommandOptionType, Context, CreateCommandOption,
-    EditInteractionResponse, GuildId, MessageId, ReactionType, ResolvedValue,
+    ChannelId, CommandOptionType, Context, CreateCommandOption, GuildId, MessageId, ReactionType,
+    ResolvedValue,
 };
 use sqlx::Pool;
 use std::collections::HashMap;
@@ -10,7 +10,6 @@ use crate::Result;
 
 pub(super) async fn run<Db, Row>(
     ctx: &Context,
-    interaction: &CommandInteraction,
     pool: &Pool<Db>,
     channel_id: ChannelId,
     guild_id: GuildId,
@@ -37,13 +36,6 @@ where
 
     channel_id
         .delete_reaction_emoji(ctx, message_id, reaction)
-        .await?;
-
-    interaction
-        .edit_response(
-            ctx,
-            EditInteractionResponse::new().content("Reaction role removed."),
-        )
         .await?;
 
     Ok(())

@@ -1,7 +1,6 @@
 use serenity::all::{
-    ChannelId, CommandInteraction, CommandOptionType, Context, CreateCommandOption, CreateEmbed,
-    CreateMessage, EditInteractionResponse, GuildId, Mentionable, MessageId, ReactionType,
-    ResolvedValue,
+    ChannelId, CommandOptionType, Context, CreateCommandOption, CreateEmbed, CreateMessage,
+    GuildId, Mentionable, MessageId, ReactionType, ResolvedValue,
 };
 use sqlx::Pool;
 use std::collections::HashMap;
@@ -11,7 +10,6 @@ use crate::Result;
 
 pub(super) async fn run<Db, Row>(
     ctx: &Context,
-    interaction: &CommandInteraction,
     pool: &Pool<Db>,
     guild_id: GuildId,
     channel_id: ChannelId,
@@ -59,13 +57,6 @@ where
     .await?;
 
     message.react(ctx, reaction).await?;
-
-    interaction
-        .edit_response(
-            ctx,
-            EditInteractionResponse::new().content("Reaction role added."),
-        )
-        .await?;
 
     Ok(())
 }

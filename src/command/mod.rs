@@ -1,5 +1,4 @@
 use serenity::all::{CommandInteraction, Context, CreateCommand, ReactionType, ResolvedValue};
-use slash_command_core::parse_options;
 use sqlx::Pool;
 
 mod add;
@@ -7,6 +6,7 @@ mod remove;
 
 pub use crate::error::{Error, Result};
 pub use crate::reaction_roles_manager::ReactionRolesManager;
+use crate::utils::parse_options;
 
 pub struct ReactionRoleCommand;
 
@@ -20,8 +20,6 @@ impl ReactionRoleCommand {
         Db: sqlx::Database,
         Row: ReactionRolesManager<Db>,
     {
-        let _ = interaction.defer(ctx).await;
-
         let guild_id = interaction
             .guild_id
             .ok_or_else(|| Error::CommandNotInGuild)?;
@@ -46,28 +44,10 @@ impl ReactionRoleCommand {
 
         match command.name {
             "add" => {
-                add::run::<Db, Row>(
-                    ctx,
-                    interaction,
-                    pool,
-                    guild_id,
-                    channel_id,
-                    reaction,
-                    &options,
-                )
-                .await?
+                add::run::<Db, Row>(ctx, pool, guild_id, channel_id, reaction, &options).await?
             }
             "remove" => {
-                remove::run::<Db, Row>(
-                    ctx,
-                    interaction,
-                    pool,
-                    channel_id,
-                    guild_id,
-                    reaction,
-                    &options,
-                )
-                .await?;
+                remove::run::<Db, Row>(ctx, pool, channel_id, guild_id, reaction, &options).await?;
             }
             _ => unreachable!("Invalid subcommand name"),
         };

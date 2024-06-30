@@ -1,6 +1,7 @@
 use serenity::all::{
-    ChannelId, CommandInteraction, Context, CreateEmbed, CreateMessage, EditInteractionResponse,
-    GuildId, Mentionable, MessageId, ReactionType, ResolvedValue,
+    ChannelId, CommandInteraction, CommandOptionType, Context, CreateCommandOption, CreateEmbed,
+    CreateMessage, EditInteractionResponse, GuildId, Mentionable, MessageId, ReactionType,
+    ResolvedValue,
 };
 use sqlx::Pool;
 use std::collections::HashMap;
@@ -8,7 +9,7 @@ use std::collections::HashMap;
 use crate::reaction_roles_manager::ReactionRolesManager;
 use crate::Result;
 
-pub(crate) async fn add<Db, Row>(
+pub(super) async fn run<Db, Row>(
     ctx: &Context,
     interaction: &CommandInteraction,
     pool: &Pool<Db>,
@@ -67,4 +68,34 @@ where
         .await?;
 
     Ok(())
+}
+
+pub(super) fn register() -> CreateCommandOption {
+    CreateCommandOption::new(CommandOptionType::SubCommand, "add", "Adds a reaction role")
+        .add_sub_option(CreateCommandOption::new(
+            CommandOptionType::Channel,
+            "channel",
+            "The channel the message is in",
+        ))
+        .add_sub_option(
+            CreateCommandOption::new(
+                CommandOptionType::String,
+                "emoji",
+                "The emoji of the reaction role",
+            )
+            .required(true),
+        )
+        .add_sub_option(
+            CreateCommandOption::new(
+                CommandOptionType::Role,
+                "role",
+                "The role to add when the emoji is reacted to",
+            )
+            .required(true),
+        )
+        .add_sub_option(CreateCommandOption::new(
+            CommandOptionType::String,
+            "message_id",
+            "The message id of the reaction role message",
+        ))
 }

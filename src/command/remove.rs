@@ -1,6 +1,6 @@
 use serenity::all::{
-    ChannelId, CommandInteraction, Context, EditInteractionResponse, GuildId, MessageId,
-    ReactionType, ResolvedValue,
+    ChannelId, CommandInteraction, CommandOptionType, Context, CreateCommandOption,
+    EditInteractionResponse, GuildId, MessageId, ReactionType, ResolvedValue,
 };
 use sqlx::Pool;
 use std::collections::HashMap;
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use crate::reaction_roles_manager::ReactionRolesManager;
 use crate::Result;
 
-pub(crate) async fn remove<Db, Row>(
+pub(super) async fn run<Db, Row>(
     ctx: &Context,
     interaction: &CommandInteraction,
     pool: &Pool<Db>,
@@ -47,4 +47,33 @@ where
         .await?;
 
     Ok(())
+}
+
+pub(super) fn register() -> CreateCommandOption {
+    CreateCommandOption::new(
+        CommandOptionType::SubCommand,
+        "remove",
+        "Removes a reaction role",
+    )
+    .add_sub_option(CreateCommandOption::new(
+        CommandOptionType::Channel,
+        "channel",
+        "The channel the message is in",
+    ))
+    .add_sub_option(
+        CreateCommandOption::new(
+            CommandOptionType::String,
+            "message_id",
+            "The message id of the reaction role message",
+        )
+        .required(true),
+    )
+    .add_sub_option(
+        CreateCommandOption::new(
+            CommandOptionType::String,
+            "emoji",
+            "The emoji of the reaction role",
+        )
+        .required(true),
+    )
 }

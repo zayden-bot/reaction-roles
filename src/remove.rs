@@ -5,7 +5,7 @@ use serenity::all::{
 use sqlx::Pool;
 use std::collections::HashMap;
 
-use crate::reaction_role_row::ReactionRoleRow;
+use crate::reaction_role_table::ReactionRoleTable;
 use crate::Result;
 
 pub(crate) async fn remove<Db, Row>(
@@ -19,14 +19,14 @@ pub(crate) async fn remove<Db, Row>(
 ) -> Result<()>
 where
     Db: sqlx::Database,
-    Row: ReactionRoleRow<Db>,
+    Row: ReactionRoleTable<Db>,
 {
     let message_id = match options.get("message_id") {
         Some(ResolvedValue::String(message_id)) => MessageId::new(message_id.parse()?),
         _ => unreachable!("Message ID is required"),
     };
 
-    Row::delete(
+    Row::delete_row(
         pool,
         guild_id,
         channel_id,

@@ -5,7 +5,7 @@ use serenity::all::{
 use sqlx::Pool;
 use std::collections::HashMap;
 
-use crate::reaction_role_row::ReactionRoleRow;
+use crate::reaction_role_table::ReactionRoleTable;
 use crate::Result;
 
 pub(crate) async fn add<Db, Row>(
@@ -19,7 +19,7 @@ pub(crate) async fn add<Db, Row>(
 ) -> Result<()>
 where
     Db: sqlx::Database,
-    Row: ReactionRoleRow<Db>,
+    Row: ReactionRoleTable<Db>,
 {
     let role = match options.get("role") {
         Some(ResolvedValue::Role(role)) => *role,
@@ -47,7 +47,7 @@ where
         }
     };
 
-    Row::create(
+    Row::create_row(
         pool,
         guild_id,
         channel_id,

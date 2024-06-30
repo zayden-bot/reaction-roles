@@ -1382,11 +1382,10 @@ dependencies = [
 [[package]]
 name = "slash-command-core"
 version = "0.1.0"
-source = "git+https://github.com/zayden-bot/slash-command-core.git?branch=master#e8ff42ddd1e74effc989131d1727050ff8404e94"
+source = "git+https://github.com/zayden-bot/slash-command-core.git?branch=master#b4d91a0c2c2b834625b96ca7b08403be275b1f4d"
 dependencies = [
  "async-trait",
  "serenity",
- "sqlx",
 ]
 
 [[package]]
@@ -1514,7 +1513,6 @@ dependencies = [
  "serde_json",
  "sha2",
  "sqlx-core",
- "sqlx-postgres",
  "syn 1.0.109",
  "tempfile",
  "url",

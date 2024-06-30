@@ -1045,6 +1045,7 @@ version = "0.1.0"
 dependencies = [
  "serenity",
  "sqlx",
+ "zayden-core",
 ]
 
 [[package]]
@@ -2278,6 +2279,15 @@ checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "zayden-core"
+version = "0.1.0"
+source = "git+https://github.com/zayden-bot/slash-command-core.git?branch=master#a9710bfa624b7a7cba473eedefc04cabd4dc42fc"
+dependencies = [
+ "async-trait",
+ "serenity",
 ]
 
 [[package]]

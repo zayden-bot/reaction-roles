@@ -6,7 +6,7 @@ use sqlx::Pool;
 use std::collections::HashMap;
 
 use crate::reaction_roles_manager::ReactionRolesManager;
-use crate::Result;
+use crate::{Error, Result};
 
 pub(super) async fn run<Db, Row>(
     ctx: &Context,
@@ -21,7 +21,10 @@ where
     Row: ReactionRolesManager<Db>,
 {
     let message_id = match options.get("message_id") {
-        Some(ResolvedValue::String(message_id)) => MessageId::new(message_id.parse()?),
+        Some(ResolvedValue::String(id)) => MessageId::new(
+            id.parse()
+                .map_err(|_| Error::InvalidMessageId(id.to_string()))?,
+        ),
         _ => unreachable!("Message ID is required"),
     };
 

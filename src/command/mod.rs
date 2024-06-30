@@ -38,7 +38,8 @@ impl ReactionRoleCommand {
         };
 
         let reaction = match options.get("emoji") {
-            Some(ResolvedValue::String(emoji)) => ReactionType::try_from(*emoji)?,
+            Some(ResolvedValue::String(emoji)) => ReactionType::try_from(*emoji)
+                .map_err(|_| Error::InvalidEmoji(emoji.to_string()))?,
             _ => unreachable!("Emoji is required"),
         };
 

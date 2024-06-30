@@ -3,7 +3,7 @@ use sqlx::any::AnyQueryResult;
 use sqlx::{FromRow, Pool};
 
 #[async_trait]
-pub trait ReactionRoleManager<Db: sqlx::Database> {
+pub trait ReactionRolesManager<Db: sqlx::Database> {
     async fn create_row(
         pool: &Pool<Db>,
         guild_id: impl Into<i64> + Send,

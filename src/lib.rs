@@ -7,12 +7,12 @@ use sqlx::Pool;
 
 mod add;
 pub mod error;
-pub mod reaction_role_manager;
+pub mod reaction_roles_manager;
 mod remove;
 
 use add::add;
 pub use error::{Error, Result};
-pub use reaction_role_manager::ReactionRoleManager;
+pub use reaction_roles_manager::ReactionRolesManager;
 use remove::remove;
 
 pub struct ReactionRoles;
@@ -25,7 +25,7 @@ impl ReactionRoles {
     ) -> Result<()>
     where
         Db: sqlx::Database,
-        Row: ReactionRoleManager<Db>,
+        Row: ReactionRolesManager<Db>,
     {
         let _ = interaction.defer(ctx).await;
 

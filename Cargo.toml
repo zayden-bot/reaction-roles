@@ -9,6 +9,8 @@ sqlx = { version = "*", default-features = false, features = ["any", "macros"] }
 
 
 [dependencies.serenity]
-version = "*"
+git = "https://github.com/serenity-rs/serenity"
+branch = "current"
+# version = "*"
 default-features = false
 features = ["rustls_backend", "builder", "client", "gateway", "model"]

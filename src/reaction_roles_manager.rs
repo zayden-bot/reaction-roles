@@ -18,6 +18,9 @@ pub trait ReactionRolesManager<Db: sqlx::Database> {
         guild_id: impl Into<i64> + Send,
     ) -> sqlx::Result<Vec<ReactionRole>>;
 
+    async fn get_row(pool: &Pool<Db>, message_id: impl Into<i64> + Send, emoji: &str)
+        -> sqlx::Result<Option<ReactionRole>>;
+
     async fn delete_row(
         pool: &Pool<Db>,
         guild_id: impl Into<i64> + Send,

@@ -13,3 +13,10 @@ branch = "current"
 # version = "*"
 default-features = false
 features = ["rustls_backend", "builder", "client", "gateway", "model"]
+
+[profile.release]
+opt-level = 3
+panic = "abort"
+stripe = true
+codegen-units = 1
+lto = "fat"

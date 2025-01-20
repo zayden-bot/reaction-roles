@@ -38,14 +38,14 @@ impl ReactionRoleReaction {
         Db: sqlx::Database,
         Manager: ReactionRolesManager<Db>,
     {
-        let member = reaction.member.as_ref().ok_or(Error::MissingGuildId)?;
-
         let reaction_role =
             Manager::get_row(pool, reaction.message_id, &reaction.emoji.to_string())
                 .await
                 .unwrap();
 
         if let Some(reaction_role) = reaction_role {
+            let member = reaction.member.as_ref().ok_or(Error::MissingGuildId)?;
+
             member
                 .remove_role(ctx, reaction_role.role_id())
                 .await

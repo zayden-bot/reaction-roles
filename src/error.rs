@@ -1,28 +1,27 @@
+use serenity::all::ReactionConversionError;
 use zayden_core::ErrorResponse;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
 pub enum Error {
-    CommandNotInGuild,
+    MissingGuildId,
     InvalidMessageId(String),
-    InvalidEmoji(String),
+    ReactionConversionError(ReactionConversionError),
+}
 
-    MemberNotFound(serenity::all::Reaction),
-    GuildNotFound(serenity::all::Reaction),
-    UserNotFound(serenity::all::Reaction),
-
-    Serenity(serenity::Error),
-    Sqlx(sqlx::Error),
+impl Error {
+    pub fn invalid_message_id(id: &str) -> Self {
+        Self::InvalidMessageId(format!("Invalid message ID: {}", id))
+    }
 }
 
 impl ErrorResponse for Error {
-    fn to_response(&self) -> String {
+    fn to_response(&self) -> &str {
         match self {
-            Self::CommandNotInGuild => String::from("This command must be used in a guild."),
-            Self::InvalidMessageId(id) => format!("Invalid message ID: {}", id),
-            Self::InvalidEmoji(e) => format!("Invalid emoji: {}", e),
-            _ => String::new(),
+            Self::MissingGuildId => zayden_core::Error::MissingGuildId.to_response(),
+            Self::InvalidMessageId(msg) => msg,
+            Self::ReactionConversionError(_) => "Failed to convert emoji to reaction",
         }
     }
 }
@@ -35,14 +34,8 @@ impl std::fmt::Display for Error {
 
 impl std::error::Error for Error {}
 
-impl From<serenity::Error> for Error {
-    fn from(e: serenity::Error) -> Self {
-        Self::Serenity(e)
-    }
-}
-
-impl From<sqlx::Error> for Error {
-    fn from(e: sqlx::Error) -> Self {
-        Self::Sqlx(e)
+impl From<ReactionConversionError> for Error {
+    fn from(err: ReactionConversionError) -> Self {
+        Self::ReactionConversionError(err)
     }
 }

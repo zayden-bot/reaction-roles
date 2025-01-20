@@ -1,4 +1,4 @@
-use serenity::all::{Context, Reaction, RoleId};
+use serenity::all::{Context, Reaction};
 use sqlx::Pool;
 
 use crate::{Error, ReactionRolesManager, Result};
@@ -16,15 +16,14 @@ impl ReactionRoleReaction {
         Manager: ReactionRolesManager<Db>,
     {
         let emoji_string = reaction.emoji.to_string();
-        let reaction_role = Manager::get_row(pool, reaction.message_id, &emoji_string).await?;
+        let reaction_role = Manager::get_row(pool, reaction.message_id, &emoji_string)
+            .await
+            .unwrap();
 
         if let Some(reaction_role) = reaction_role {
-            let member = reaction
-                .member
-                .as_ref()
-                .ok_or_else(|| Error::MemberNotFound(reaction.clone()))?;
+            let member = reaction.member.as_ref().ok_or(Error::MissingGuildId)?;
 
-            member.add_role(ctx, reaction_role.role_id as u64).await?;
+            member.add_role(ctx, reaction_role.role_id()).await.unwrap();
         }
 
         Ok(())
@@ -39,22 +38,18 @@ impl ReactionRoleReaction {
         Db: sqlx::Database,
         Manager: ReactionRolesManager<Db>,
     {
-        let guild_id = reaction
-            .guild_id
-            .ok_or_else(|| Error::GuildNotFound(reaction.clone()))?;
-        let user_id = reaction
-            .user_id
-            .ok_or_else(|| Error::UserNotFound(reaction.clone()))?;
+        let member = reaction.member.as_ref().ok_or(Error::MissingGuildId)?;
 
         let reaction_role =
-            Manager::get_row(pool, reaction.message_id, &reaction.emoji.to_string()).await?;
+            Manager::get_row(pool, reaction.message_id, &reaction.emoji.to_string())
+                .await
+                .unwrap();
 
         if let Some(reaction_role) = reaction_role {
-            let role_id = RoleId::new(reaction_role.role_id as u64);
-
-            ctx.http
-                .remove_member_role(guild_id, user_id, role_id, Some("Reaction role removed"))
-                .await?;
+            member
+                .remove_role(ctx, reaction_role.role_id())
+                .await
+                .unwrap();
         }
 
         Ok(())

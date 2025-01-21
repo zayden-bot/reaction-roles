@@ -44,7 +44,12 @@ impl ReactionRoleReaction {
                 .unwrap();
 
         if let Some(reaction_role) = reaction_role {
-            let member = reaction.member.as_ref().ok_or(Error::MissingGuildId)?;
+            let member = reaction
+                .guild_id
+                .ok_or(Error::MissingGuildId)?
+                .member(ctx, reaction.user_id.unwrap())
+                .await
+                .unwrap();
 
             member
                 .remove_role(ctx, reaction_role.role_id())

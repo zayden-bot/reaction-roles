@@ -16,13 +16,12 @@ impl ReactionRoleCommand {
         reaction: ReactionType,
         mut options: HashMap<&str, ResolvedValue<'_>>,
     ) -> Result<()> {
-        let Some(ResolvedValue::String(message_id)) = options.remove("message_id") else {
+        let Some(ResolvedValue::String(id)) = options.remove("message_id") else {
             unreachable!("Message ID is required")
         };
         let message_id = MessageId::new(
-            message_id
-                .parse()
-                .map_err(|_| Error::invalid_message_id(message_id))?,
+            id.parse()
+                .map_err(|_| Error::InvalidMessageId(id.to_string()))?,
         );
 
         Manager::delete_row(

@@ -25,7 +25,8 @@ impl ReactionRoleCommand {
 
         let message_id = match options.remove("message_id") {
             Some(ResolvedValue::String(id)) => Some(MessageId::new(
-                id.parse().map_err(|_| Error::invalid_message_id(id))?,
+                id.parse()
+                    .map_err(|_| Error::InvalidMessageId(id.to_string()))?,
             )),
             _ => None,
         };
